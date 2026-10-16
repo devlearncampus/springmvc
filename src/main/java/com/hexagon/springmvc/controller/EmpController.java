@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.hexagon.springmvc.dto.request.EmpRequestDTO;
+import com.hexagon.springmvc.service.EmpService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 //사원과 관련된 요청을 처리하는 하위 컨트롤러 
@@ -20,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 // @Controller, @Service, @Repository, @Component, @ControllerAdvice....
 @Slf4j
 public class EmpController {
-
+	
 	/*--------------------------------------------
 	 사원 등록 폼 요청을 처리하는 메서드
 	--------------------------------------------*/ 	
@@ -41,6 +43,8 @@ public class EmpController {
 		log.debug("신장은 {}", empRequestDTO.getHeight());
 		log.debug("몸무게는 {}", empRequestDTO.getWeight());
 		log.debug("혈액형은 {}", empRequestDTO.getBloodType());
+		
+		
 		
 		return null;
 	}

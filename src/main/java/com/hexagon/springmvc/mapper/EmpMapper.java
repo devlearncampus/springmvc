@@ -1,0 +1,13 @@
+package com.hexagon.springmvc.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.hexagon.springmvc.domain.Emp;
+
+//@Mapper 어노테이션을 붙이면  Mapper.xml  을 간접제어할 수 있다.
+//즉  Mapper.xml 의 모든  id와 동일한 메서드를 정의해야 함!!
+//결과적으로 Mapper  인터페이스를 사용하게 되면,  DAO를 대신함
+@Mapper
+public interface EmpMapper {
+	public int insert(Emp emp);
+}

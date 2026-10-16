@@ -5,17 +5,22 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariDataSource;
 
 
 @Configuration  // 이 클래스는 java 의 로직을 작성하기 위함이 아니라, 기존의 xml과 같은 설정을 대신하기 위한 설정용 클래스임을 선언 
+@EnableTransactionManagement //스프링이 트랜잭션을 자동으로 처리해주기 위한 설정
+@MapperScan(basePackages = {"com.hexagon.springmvc.mapper"})
 public class RootConfig {
 	
 	/*----------------------------------------------
@@ -26,7 +31,7 @@ public class RootConfig {
 		//기존에는 우리가 Tomcat 이 지원하는 커넥션풀을 이용했다면, 스프링에서는 훨씬 더 성능이 좋은 커넥션 풀인 히카리 커넥션풀을 쓴다( 스프링부트에서는 디폴트..)
 		HikariDataSource dataSource = new HikariDataSource();
 		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-		dataSource.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:XEPDB1");
+		dataSource.setJdbcUrl("jdbc:oracle:thin:@localhost:1521/XEPDB1");
 		dataSource.setUsername("web");
 		dataSource.setPassword("1234");
 		
