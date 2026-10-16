@@ -17,10 +17,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-
+/*
+이  RootConfig 클래스에 등록되는 빈들은 , 서블릿 수준이 아닌 ServletContext 수준의 빈으로 등록되므로 
+톰켓이 가동될때 즉 애플리케이션이 가동될때 함께 빈들도 메모리에 올라와서 ServletContext가 보유한 스프링 컨테이너에 의해 관리된다 
+*/
 @Configuration  // 이 클래스는 java 의 로직을 작성하기 위함이 아니라, 기존의 xml과 같은 설정을 대신하기 위한 설정용 클래스임을 선언 
 @EnableTransactionManagement //스프링이 트랜잭션을 자동으로 처리해주기 위한 설정
 @MapperScan(basePackages = {"com.hexagon.springmvc.mapper"})
+@ComponentScan(basePackages = {"com.hexagon.springmvc.service"}) // 서블릿들이 볼 수 있는 scope 인 ServletContext 수준에 등록될 컴포넌트들의 위치 등록!!
 public class RootConfig {
 	
 	/*----------------------------------------------

@@ -2,6 +2,7 @@ package com.hexagon.springmvc.config.spring;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.hexagon.springmvc.controller.EmpController;
@@ -11,6 +12,7 @@ import com.hexagon.springmvc.controller.EmpController;
  * 프레임웍 자체적으로 관리하도록 등록해야 함..이때 등록될 클래스들을 가리켜 빈이라고 하고, 이 빈들을 관리해주는 스프링의 관리주체를 
  * 스프링 컨테이너라 하며 자료형은 ApplicationContext  
  * */
+@Configuration //이 클래스는 로직 용이 아니라, 빈 설정용이다!!!
 @ComponentScan(basePackages = {"com.hexagon.springmvc.controller"})
 public class AppConfig {
 	//스프링 컨테이너가 보유할 빈들의 목록을 어노테이션으로 등록하자

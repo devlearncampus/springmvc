@@ -19,9 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 //사원과 관련된 요청을 처리하는 하위 컨트롤러 
 @Controller //  원래는  AppConfig 클래스에서 빈을 등록했지만, 스프링에서 이미 잘 알려진 특수한 빈들을 컴포넌트라 하며
 //이 컴포넌트들은 어노테이션으로 자동 등록한다!! 
-// @Controller, @Service, @Repository, @Component, @ControllerAdvice....
+//@Controller, @Service, @Repository, @Component, @ControllerAdvice....
 @Slf4j
+@RequiredArgsConstructor
 public class EmpController {
+	
+	//RootConfig 에 등록되어  @ComponentScan의 대상이 되는 컴포넌트이므로, 이미 메모리에 올라와 있고, 현재 컨트롤러에 자동 주입이 완료됨
+	private final EmpService empService; 
 	
 	/*--------------------------------------------
 	 사원 등록 폼 요청을 처리하는 메서드
@@ -44,7 +48,12 @@ public class EmpController {
 		log.debug("몸무게는 {}", empRequestDTO.getWeight());
 		log.debug("혈액형은 {}", empRequestDTO.getBloodType());
 		
-		
+		//컨트롤러가 모델 영역에 "사원가입" 을 요청하는 시점임..
+		//만일 서비스의 존재가 없다면 컨트롤러는  emp 에 넣어도주고  bio에도 넣어줘
+		//즉 컨트롤러 영역에서는 모델 계층에 일을 시킬때는 추상적으로 시켜야 한다..따라서 서비스의 존재는 필수다. 
+		//만일 없다면 계층이 컨트롤러의 영역과 서비스의 영역이 모호해짐...
+		empService.regist(empRequestDTO);
+	
 		
 		return null;
 	}

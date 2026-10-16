@@ -30,7 +30,8 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 			RootConfig.class //모든 DispatcherServlet 들이 참조할 수 있는 공통의 모델과 관련된 빈즈들을 등록할 설정 클래스
 		}; 
 	}
-
+	
+	//서블릿의 수준의 컨테이너가 보유할 빈들을 명시한 클래스 등록
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
 		return new Class<?>[] {
