@@ -1,4 +1,8 @@
+<%@page import="java.util.List"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
+<%
+	List<String> list = (List)request.getAttribute("list");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,11 +20,21 @@ function getHint(){
 </script>
 </head>
 <body>
-	
+
 	<form id="form1">
-		<input type="text">
+		<input type="text" name="keyword">
 		<button type="button" onClick="getHint()">검색</button>
-		<div>...검색어에 사용될 제안 키워드들...</div>
+		<div>
+		<%if(list==null){%>
+			...검색어에 사용될 제안 키워드들...
+		<%
+		}else{
+			for(String obj : list){
+				out.print(obj+"<br>");				
+			}	
+		}
+		%>
+		</div>
 	</form>
 	
 </body>
