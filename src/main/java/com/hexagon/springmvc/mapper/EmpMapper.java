@@ -1,5 +1,7 @@
 package com.hexagon.springmvc.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.hexagon.springmvc.domain.Emp;
@@ -10,4 +12,5 @@ import com.hexagon.springmvc.domain.Emp;
 @Mapper
 public interface EmpMapper {
 	public int insert(Emp emp);
+	public List selectAll();
 }

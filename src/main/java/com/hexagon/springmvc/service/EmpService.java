@@ -1,9 +1,15 @@
 package com.hexagon.springmvc.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.hexagon.springmvc.domain.Bio;
 import com.hexagon.springmvc.domain.Emp;
 import com.hexagon.springmvc.dto.request.EmpRequestDTO;
+import com.hexagon.springmvc.exception.BusinessException;
+import com.hexagon.springmvc.mapper.BioMapper;
 import com.hexagon.springmvc.mapper.EmpMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -20,9 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor //lombok 의 기능 중 하나로써, 현재 클래스의 멤버변수를 매개변수로 한
 										//생성자를 자동으로 정의해줌..
 @Slf4j
+@Transactional  //이 서비스 객체가 트랜잭션을 처리할 수 있다!
 public class EmpService {
 	//Mybatis 의 인터페이스를 사용할 경우 , DAO 는 필요없다 
 	private final EmpMapper empMapper; 
+	private final BioMapper bioMapper;
+	
 	//final을 명시한 이유는, 멤버변수에 final 을 명시할 경우, 반드시  null이 아닌 값이 들어있어야 
 	//현재 클래스가 컴파일되기 때문에, 실수로 인한 null을 방지하기 위한 설정 (안전 장치)
 	/*@RequiredArgsConstructor 에 의해 아래와 같은 생성자를 자동으로 정의
@@ -40,15 +49,44 @@ public class EmpService {
 		emp.setAge(empRequestDTO.getAge()); //나이 옮기기 
 		emp.setEmail(empRequestDTO.getEmail()); //이메일 옮기기
 		
-		int result = empMapper.insert(emp);
+		/*------------------------------------------
+		 "사원 등록" 이라는 업무는 ( emp + bio ) 가 모두 성공해야 전체를 성공으로 처리할 수 있는 트랜잭션 상황의 업무이다
+		 따라서 bio까지 모두 제대로 들어가면  DML을 확정짓고, 둘중에 하나라도 실패하면 rollback 처리할 것임.
+		 전통적으로 트랜잭션은 개발자가 직접 rollback, commit  을 명시했으나, 너무 애플리케이션 전반적으로 트랜잭션 코드를 작성하면 
+		 코드가 너무 가독성이 떨어지고, 코드 중복이 발생하게 된다.. 그래서 스프링에서는 개발자가 트랜잭션을 별도로 처리하지 않는다..
+		 단, 개발자는 실패할 경우 예외만 던지면 된다~~ 
+		------------------------------------------*/
+		int result = empMapper.insert(emp);//트랜잭션을 이루는 세부업무 중 1/2
+		log.debug("emp 등록 결과는 {}", result);
 		
-		if(result > 0) { //성공
-			log.debug("emp 등록 성공");
-		}else {
-			log.debug("emp 등록 실패");
+		if(result<1) { //실패라면..
+			//개발자가 일부러 예외를 발생시키기!!
+			throw new BusinessException("emp 등록 실패"); //RuntimeException 은 개발자가 별도로 메서드 우측에 throws  처리하지 않아도 
+																						//자동으로 이 메서드를 호출한 곳으로 전달(throws) 처리 된다..
 		}
 		
+		Bio bio = new Bio();
+		bio.setHeight(empRequestDTO.getHeight()); //키 
+		bio.setWeight(empRequestDTO.getWeight()); //몸무게 
+		bio.setBloodType(empRequestDTO.getBloodType());//혈액형 
+		bio.setEmp(emp); // <-- 방금  insert 된 사원의 emp_id  값을 대입!!!
+		
+		result = bioMapper.insert(bio);//트랜잭션을 이루는 세부업무 중 2/2
+		//트랜잭션의 세부 업무들 중 하나라도 실패하는 업무가 있다면, 스프링에게 에러가 났음을 알려줘야 하는데
+		//, 그 수단이 바로 java 의 예외를 발생시키는 것이다!!
+		//result=0;//조작
+		
+		if(result <1) {
+			throw new BusinessException("사원의 신체 정보 등록 실패");
+		}
+		
+		log.debug("bio 등록 결과는 {}", result);
 	} // emp + bio 모두  insert 하는 업무
+	
+	//사원 목록 가져오기 
+	public List getEmpList() {
+		return empMapper.selectAll();
+	}
 }
 
 
