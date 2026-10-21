@@ -5,11 +5,10 @@ import java.util.List;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hexagon.springmvc.domain.Emp;
+import com.hexagon.springmvc.common.web.Pager;
 import com.hexagon.springmvc.dto.request.EmpRequestDTO;
 import com.hexagon.springmvc.exception.BusinessException;
 import com.hexagon.springmvc.service.EmpService;
@@ -20,15 +19,18 @@ import lombok.extern.slf4j.Slf4j;
 //사원에 대한 요청을 처리하는 컨트롤러는 맞으나, 클라이언트의 비동기 요청을 받기 위한 컨트롤러임
 //따라서 이 컨트롤러의 메서들은 jsp를 반환하면 안되고, 순수한 데이터만을 반환해서  응답 body 로 보내야 한다..
 @RestController
-@RequestMapping("/rest/emp")
+//@RequestMapping("/rest/emps")
 @Slf4j
 @RequiredArgsConstructor
 public class RestEmpController {
 
 	private final EmpService empService;
+	private final Pager pager;
 	
-	//사원 등록 요청 받기 
-	@PostMapping("/regist")
+	/*---------------------------------------
+	사원 등록 요청 받기
+	---------------------------------------*/ 
+	@PostMapping("/rest/emps")
 	@ResponseBody //이 어노테이션을 붙이면 DispatcherServlet  은 더이상 ViewResolver에게 jsp와의 매핑을 시도하지 않음
 							//그냥 응답 정보인 response에 아래의 return 된 데이터를 탑재하고,  tomcat은 이 data를 전송해버림
 							//단 html 형식으로 보내지 않음..
@@ -45,9 +47,41 @@ public class RestEmpController {
 		return "ok";
 	}
 	
-	@GetMapping("/")
-	
-	
+	/*---------------------------------------
+	사원 목록 요청 받기
+	---------------------------------------*/ 
+	@GetMapping("/rest/emps")
+	@ResponseBody
+	public String getList() {
+		List empList = empService.getEmpList(pager);
+		
+		StringBuffer sb = new StringBuffer();
+		//과일 3개를 모아서 바나나, 포도, 멜론
+		/*
+		 웹상으로 클라이언트와 서버가 데이터를 주고 받을때는 문자열로만 주고 받을 수 있다..
+		 따라서 개발자가 클라이언트에게 어떤 형식으로 데이터를 보낼지는 , 개발자 마음이다..
+		 하지만, 개발 시 어떤 기준이 없다면, 회사간 , 회사내에서 팀원간 의사소통에 발생한다..
+		 따라서 전산 분야에서는 특히 웹상에서 문자열 데이터를 주고 받을때 가장 많이 사용하는 형식이 있다..
+		 XML
+		 JavaScript Object Notatin( 압도적) - JavaScript의 객체 표기법
+		    												- JSON  이란 js 의 객체 리터럴 형식을 그대로 본뜬 문자열을 의미
+		 * */
+		
+		sb.append("{");
+		sb.append("    \"name\":\"뽀삐\",");
+		sb.append("    \"age\": 2,");
+		sb.append("    \"gender\":\"girl\",");
+		sb.append("    \"isPure\" : true, ");
+		sb.append("    \"foods\":[\"로얄캐닌\", \"츄릅\", \"아이스크림\"],");
+		sb.append("    \"friend\":{");
+		sb.append("        \"name\":\"meo\",");
+		sb.append("        \"age\":1");
+		sb.append("    }");
+		sb.append("}");
+		
+		return sb.toString();
+
+	}
 	
 	//모델 영역에서 에러가 발생하면 이 컨트롤러까지 전달되기 때문에, 컨트롤러 영역에서 
 	//적절한 예외를 처리하자!!

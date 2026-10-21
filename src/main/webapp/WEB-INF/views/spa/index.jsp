@@ -19,7 +19,7 @@
 	function regist(){
 		//비동기 방식으로 POST 요청을 시도하되 순수 XMLHttpRequest를 사용하면 코드량이 많아지고 복잡하므로, JQuery 를 사용하여 좀더 단순화시켜본다
 		$.ajax({
-			url:"/rest/emp/regist",
+			url:"/rest/emps",
 			type:"POST",
 			//html 의 form태그로 즉 동기방식으로 post 전송을 시도하면 내부적으로 
 			//contentType(전송할 데이터 유형)이 자동으로 브라우저에 의해 application/x-www-form-urlencoded; charset=UTF-8
@@ -43,23 +43,39 @@
 		});
 	}
 	
-	
-	function getList(){
+	/*----------------------------------
+	사원 목록 비동기 요청 
+	----------------------------------*/
+	function getEmpList(){
+		
+		//XMLHttpRequest를 쓰기 쉽게 끔 jquery로 숨겨놓았기 때문에 개발자가 코드를 단순화 시켜서 개발할 수 있다..
 		$.ajax({
-			url:"/rest/emp/list",
+			url:"/rest/emps",
 			type:"GET",
 			success:function(result, status, xhr){
 				console.log(result);
-			}			
-		});	
+				//서버에서 받아온 데이터가 문자열인지, js 의 객체인지 판단해보자 
+				//만일 객체라면, 객체.속성 으로 접근이 가능하다..
+				//서버에서 보내온 String  데이터가 만일 JS 의 객체 표기법을 준수했다면 JS 에서는 
+				//문자열을 객체로 변환할 수 잇다..
+				console.log("파싱전의 강아지 이름은 ",result.name);
+				
+				let dog = JSON.parse(result); // JSON표기를 준수한 문자열을 실제 객체로 변환
+				
+				console.log("강아지 이름은 ", dog.name);
+				
+			}
+		}); 		
+		
 	}
+	
 	
 	$(function(){
 		$("#bt-regist").click(()=>{
 			regist();
 		});
 		
-		getList();
+		getEmpList();
 	});
 
 </script>
