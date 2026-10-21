@@ -4,11 +4,12 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hexagon.springmvc.common.web.Pager;
+import com.hexagon.springmvc.domain.Emp;
 import com.hexagon.springmvc.dto.request.EmpRequestDTO;
 import com.hexagon.springmvc.exception.BusinessException;
 import com.hexagon.springmvc.service.EmpService;
@@ -18,7 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 
 //사원에 대한 요청을 처리하는 컨트롤러는 맞으나, 클라이언트의 비동기 요청을 받기 위한 컨트롤러임
 //따라서 이 컨트롤러의 메서들은 jsp를 반환하면 안되고, 순수한 데이터만을 반환해서  응답 body 로 보내야 한다..
-@RestController
+@RestController //Rest전용 컨트롤러는 컨트롤러의 메서드에 이미 @ResponseBody가 적용된 상태이다..
+						//따라서 모든 이 클래스안의 메서드의 return 값을 jsp로 매핑하려고 하지 않고, 데이터 자체를 응답 정보로 보내버린다..	
 //@RequestMapping("/rest/emps")
 @Slf4j
 @RequiredArgsConstructor
@@ -31,7 +33,7 @@ public class RestEmpController {
 	사원 등록 요청 받기
 	---------------------------------------*/ 
 	@PostMapping("/rest/emps")
-	@ResponseBody //이 어노테이션을 붙이면 DispatcherServlet  은 더이상 ViewResolver에게 jsp와의 매핑을 시도하지 않음
+	//@ResponseBody //이 어노테이션을 붙이면 DispatcherServlet  은 더이상 ViewResolver에게 jsp와의 매핑을 시도하지 않음
 							//그냥 응답 정보인 response에 아래의 return 된 데이터를 탑재하고,  tomcat은 이 data를 전송해버림
 							//단 html 형식으로 보내지 않음..
 	public String regist(EmpRequestDTO empRequestDTO) {
@@ -51,11 +53,11 @@ public class RestEmpController {
 	사원 목록 요청 받기
 	---------------------------------------*/ 
 	@GetMapping("/rest/emps")
-	@ResponseBody
-	public String getList() {
-		List empList = empService.getEmpList(pager);
+	//@ResponseBody
+	public List getList() {
+		List<Emp> empList = empService.getEmpList(pager);
 		
-		StringBuffer sb = new StringBuffer();
+		//StringBuffer sb = new StringBuffer();
 		//과일 3개를 모아서 바나나, 포도, 멜론
 		/*
 		 웹상으로 클라이언트와 서버가 데이터를 주고 받을때는 문자열로만 주고 받을 수 있다..
@@ -66,7 +68,8 @@ public class RestEmpController {
 		 JavaScript Object Notatin( 압도적) - JavaScript의 객체 표기법
 		    												- JSON  이란 js 의 객체 리터럴 형식을 그대로 본뜬 문자열을 의미
 		 * */
-		
+		//jackson 라이브러리를 이용하면, java와  ---><--- JSON 문자열과의 변환을 자동으로 해결
+		/*
 		sb.append("{");
 		sb.append("    \"name\":\"뽀삐\",");
 		sb.append("    \"age\": 2,");
@@ -78,24 +81,33 @@ public class RestEmpController {
 		sb.append("        \"age\":1");
 		sb.append("    }");
 		sb.append("}");
-		
-		return sb.toString();
+		*/
+		return empList;
 
 	}
+	
+	/*---------------------------------------
+	사원 상세 요청 받기
+	---------------------------------------*/
+	@GetMapping("/rest/emps/{empId}")
+	public Emp getDetail(@PathVariable("empId") int empId) {
+		return empService.getDetail(empId);
+	} 
+
 	
 	//모델 영역에서 에러가 발생하면 이 컨트롤러까지 전달되기 때문에, 컨트롤러 영역에서 
 	//적절한 예외를 처리하자!!
 	//문법 또는 시스템 적인 에러 말고, 우리가 사업상 정해놓은 규칙으로 정의한 커스텀 예외를
 	//비즈니스 예외라고 하고 , 우리의 경우 클래스명을 BusinessException 으로 정햇다..
 	@ExceptionHandler(BusinessException.class)
-	@ResponseBody
+	//@ResponseBody
 	public String handle(BusinessException e) {
 		return e.getMessage(); //클라이언트가 비동기 요청을 시도하면 에러 조차도  jsp가 아닌
 											//순수 데이터로 보여줘야 한다..
 	}
 	
 	@ExceptionHandler(Exception.class)
-	@ResponseBody
+	//@ResponseBody
 	public String handle(Exception e) {
 		return e.getMessage();
 	}

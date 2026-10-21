@@ -39,8 +39,53 @@
 				//status 서버에서 보내온 HTTP  상태 코드 (성공 200, 500에러..)
 				//xhr  : XMLHttpRequest
 				console.log("서버에서 보내온 데이터는 ", result);
+				
+				getEmpList(); 
 			}
 		});
+	}
+	
+	/*----------------------------------
+	사원 한건 비동기 요청  
+	----------------------------------*/
+	function getEmp(empId){
+		$.ajax({
+			url:"/rest/emps/"+empId,
+			type:"GET",
+			success:function(result, status, xhr){
+				console.log(result);
+				//우측 상세보기 영역에 사원정보 채우기!!!
+				$("#update-form input[name='name']").val(result.ename); //사원명 채우기
+				$("#update-form input[name='age']").val(result.age); //나이 채우기
+				$("#update-form input[name='email']").val(result.email); //이메일 채우기
+				$("#update-form input[name='height']").val(result.bio.height); //신장 채우기
+				$("#update-form input[name='weight']").val(result.bio.weight); //몸무게 채우기
+				$("#update-form select[name='bloodType']").val(result.bio.bloodType); //혈액형 채우기
+			}
+		});
+	}
+	/*----------------------------------
+	사원 목록 시각화 처리  
+	----------------------------------*/
+	function empPrint(empList){
+		//$("#tbody").html("<h3>여기에 회원 목록 나올예정</h3>");
+		
+		let tag=""; //여기에 태그를 누적시킬 예정
+		
+		for(let i=0 ;i<empList.length;i++){
+			let emp = empList[i];
+			
+			tag+="<tr>";
+			tag+="<td>1</td>";
+			tag+="<td><a href='#' onClick='getEmp("+emp.empId+")'>"+emp.ename+"</a></td>";
+			tag+="<td>"+emp.age+"</td>";
+			tag+="<td>"+emp.email+"</td>";
+			tag+="<td>"+emp.bio.height+"</td>";
+			tag+="<td>"+emp.bio.weight+"</td>";
+			tag+="<td>"+emp.bio.bloodType+"</td>";
+			tag+="</tr>";
+		}
+		$("#tbody").html(tag);
 	}
 	
 	/*----------------------------------
@@ -58,12 +103,9 @@
 				//만일 객체라면, 객체.속성 으로 접근이 가능하다..
 				//서버에서 보내온 String  데이터가 만일 JS 의 객체 표기법을 준수했다면 JS 에서는 
 				//문자열을 객체로 변환할 수 잇다..
-				console.log("파싱전의 강아지 이름은 ",result.name);
-				
-				let dog = JSON.parse(result); // JSON표기를 준수한 문자열을 실제 객체로 변환
-				
-				console.log("강아지 이름은 ", dog.name);
-				
+				//let empList = JSON.parse(result); // JSON표기를 준수한 문자열을 실제 객체로 변환
+				console.log("첫번째 사원의 메일은 ", result[0].email)
+				 empPrint(result);
 			}
 		}); 		
 		
@@ -90,7 +132,7 @@
 		<div class="row">
 			<div class="col-sm-4" style="background-color: lavender;">
 				<h2>사원 등록</h2>
-				<form id="form1">
+				<form id="regist-form">
 				
 					<div class="form-group">
 						<input type="text" class="form-control" placeholder="사원명 입력" name="name">
@@ -135,16 +177,8 @@
 							<th>혈액형</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
+					<tbody id="tbody">
+						<!-- 이 영역에 서버에서 가져온 데이터를 동적(= 실행시 runtime)으로 출력하겠다  -->
 						
 						<tr>
 							<td colspan="7">
@@ -160,7 +194,7 @@
 			</div>
 			<div class="col-sm-4" style="background-color: lavender;">
 				<h2>사원 상세 정보</h2>
-				<form id="form1">
+				<form id="update-form">
 				
 					<div class="form-group">
 						<input type="text" class="form-control" placeholder="사원명 입력" name="name">
@@ -187,7 +221,8 @@
 						</select>
 					</div>
 					
-					<button type="button" class="btn btn-primary" id="bt-regist">Submit</button>
+					<button type="button" class="btn btn-primary" id="update-bt">수정</button>
+					<button type="button" class="btn btn-primary" id="delete-bt">삭제</button>
 				</form>
 			
 			

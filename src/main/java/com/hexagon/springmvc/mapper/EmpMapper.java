@@ -17,4 +17,5 @@ public interface EmpMapper {
 	//public List selectAll(@Param("offset") int offset, @Param("pageSize") int pageSize);
 	public List selectAll(Pager pager);
 	public int selectTotalCount();
+	public Emp select(int empId);
 }

@@ -3,6 +3,7 @@ package com.hexagon.springmvc.config.spring;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.hexagon.springmvc.common.web.Pager;
@@ -12,6 +13,7 @@ import com.hexagon.springmvc.common.web.Pager;
  * 프레임웍 자체적으로 관리하도록 등록해야 함..이때 등록될 클래스들을 가리켜 빈이라고 하고, 이 빈들을 관리해주는 스프링의 관리주체를 
  * 스프링 컨테이너라 하며 자료형은 ApplicationContext  
  * */
+@EnableWebMvc
 @Configuration //이 클래스는 로직 용이 아니라, 빈 설정용이다!!!
 @ComponentScan(basePackages = {
 	"com.hexagon.springmvc.controller", 

@@ -103,7 +103,16 @@ public class EmpService {
 										//결합도가 강하면 안된다 즉  컨트롤러에서 사용되는 HttpServletRequest를 쓰면 안된다
 		return empList;
 	}
+	
+	//사원 한명 가져오기 
+	public Emp getDetail(int empId) {
+		
+		return empMapper.select(empId);
+	}
+	
 }
+
+
 
 
 
