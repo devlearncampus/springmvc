@@ -70,16 +70,25 @@ public class EmpController {
 	@GetMapping("/list")
 	public String getList(Model model, HttpServletRequest request) { // request 에 직접 담아도 되지만, 스프링에서는 결고를 Model 객체를 통해 담는다..
 		
-		 
+		/*
+		 * Pager  의 역할
+		 * 1)  mybatis Mapper.xml의 offset, pageSize 값을 넘기기 위한 목적
+		 * 2)  select 문 수행 후 반환된 List를 대상으로 분할 및 분석하는 목적
+		 * 
+		 * */ 
 		pager.init(request);//페이저 초기화(계산식이 동작해야하므로)
 		
 		//3단계) 모델 영역에 일 시키기
-		List empList = empService.getEmpList(pager);
+		empService.getEmpList(pager);
+
+		//서비스 객체에 totalCount, List 를 주입했으므로, 다시 페이징 계산을 하기 위해 호출함..
+		pager.init(request);
 		
 		//4단계)  jsp에 보여질 List 저장 
-		model.addAttribute("empList", empList);	
+		//model.addAttribute("empList", empList); 서비스에서 이미 Pager에 이미 List 를 심었음	
+		model.addAttribute("pager", pager);
 		
-		log.debug("db 에서 가져온 결과 리스트는 {}", empList);
+		log.debug("db 에서 가져온 결과 리스트는 {}", pager.getList());
 		return "emp/list";
 	}
 	

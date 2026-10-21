@@ -22,14 +22,14 @@
 	</insert>
 	
 	
-	<resultMap type="Bio" id="joinMap">
-		<id 		column="emp_id" 			property="emp.empId"/>	
-		<result 	column="ename" 			property="emp.ename"/>			
-		<result 	column="age" 				property="emp.age"/>			
-		<result 	column="email" 			property="emp.email"/>			
-		<result 	column="height" 			property="height"/>			
-		<result 	column="weight" 			property="weight"/>			
-		<result 	column="blood_type" 	property="bloodType"/>			
+	<resultMap type="Emp" id="joinMap">
+		<id 		column="emp_id" 			property="empId"/>	
+		<result 	column="ename" 			property="ename"/>			
+		<result 	column="age" 				property="age"/>			
+		<result 	column="email" 			property="email"/>			
+		<result 	column="height" 			property="bio.height"/>			
+		<result 	column="weight" 			property="bio.weight"/>			
+		<result 	column="blood_type" 	property="bio.bloodType"/>			
 	</resultMap>
 	
 	<!--모든 사원 정보 가져오기 emp 와  bio 와의 조인 -->
@@ -46,10 +46,33 @@
 		select e.emp_id as emp_id, ename, age, email, height, weight, blood_type
 		from emp e join bio b
 		on e.emp_id = b.emp_id		
-		offset #{offset} rows fetch next #{pageSize} rows only  <!--  offset 에는 몇번째 레코드부터 가져올지 결정 (0부터 시작), next 뒤에는 몇건씩 가져올지 결정 -->
+		<!--  offset 에는 몇번째 레코드부터 가져올지 결정 (0부터 시작), next 뒤에는 몇건씩 가져올지 결정 -->
+		offset #{offset} rows fetch next #{pageSize} rows only  
 	</select>
 	
+	<!-- 
+		기존  select 문으로 데이터를 가져올때 offset, pageSize 를 이용하지 않았다..이때는 반환된  List 의 size()  가 곧 게시물의 총 수였다.
+		하지만 offset, pageSize를 이용하는 쿼리문에서는 총 레코드 수를 알 방법이 없으므로, 따로 별도의 쿼리를 실행하여 구해야 한다..
+	 -->
+	<select id="selectTotalCount" resultType="int">
+		select count(*) as totalCount  from emp
+	</select>
+	
+	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

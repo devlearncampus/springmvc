@@ -11,4 +11,6 @@ public class Emp {
 	private String ename;
 	private int age;
 	private String email;	
+	private Bio bio;
+	
 }

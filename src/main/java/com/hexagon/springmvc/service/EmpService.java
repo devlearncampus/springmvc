@@ -86,7 +86,22 @@ public class EmpService {
 	
 	//사원 목록 가져오기 
 	public List getEmpList(Pager pager) {
-		return empMapper.selectAll(pager);
+		
+		//이 시점에 게시물을 가져오게 되므로, 기존 jsp가 담당하는 페이징 처리를 Pager 가 담당
+		//하게되므로, 여기서  Pager 에게 페이징 처리를 맡겨야 한다..따라서 Pager 에게
+		//필요한 정보는 다 넘겨야 한다..
+		List empList = empMapper.selectAll(pager);  // 게시판 목록을 가져오는 시점!!
+		int totalCount = empMapper.selectTotalCount();
+		log.debug("totalCount is {}", totalCount);
+		
+		//이미 mybatis에 offset, pageSize를 넘기고 온 Pager  한테, 추가적으로 
+		//select문으로 가져온 List 등의 정보를 넘겨서 페이징 계산을 또 맡겨야 한다..
+		pager.setList(empList);
+		pager.setTotalCount(totalCount);
+		
+		//pager.init(request); 여기서 원래 하면 더 개념상 쉽겠으나, 하지 않은 이유는 서비스는 모델 영역이므로, 컨트롤러와
+										//결합도가 강하면 안된다 즉  컨트롤러에서 사용되는 HttpServletRequest를 쓰면 안된다
+		return empList;
 	}
 }
 
