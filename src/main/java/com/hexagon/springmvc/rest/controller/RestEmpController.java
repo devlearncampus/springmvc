@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hexagon.springmvc.domain.Bio;
+import com.hexagon.springmvc.domain.Emp;
 import com.hexagon.springmvc.dto.request.EmpRequestDTO;
 import com.hexagon.springmvc.exception.BusinessException;
 import com.hexagon.springmvc.service.EmpService;
@@ -45,12 +45,9 @@ public class RestEmpController {
 		return "ok";
 	}
 	
-	@GetMapping("/list")
-	public List getList() {
-		List<Bio> empList=empService.getEmpList();
-		
-		return empList;
-	}
+	@GetMapping("/")
+	
+	
 	
 	//모델 영역에서 에러가 발생하면 이 컨트롤러까지 전달되기 때문에, 컨트롤러 영역에서 
 	//적절한 예외를 처리하자!!
