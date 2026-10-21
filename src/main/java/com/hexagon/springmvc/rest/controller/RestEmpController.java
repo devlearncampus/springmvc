@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hexagon.springmvc.common.web.Pager;
@@ -93,6 +95,18 @@ public class RestEmpController {
 	public Emp getDetail(@PathVariable("empId") int empId) {
 		return empService.getDetail(empId);
 	} 
+
+	/*---------------------------------------
+	사원 1명 수정하기
+	---------------------------------------*/
+	@PutMapping("/rest/emps/{empId}")
+	//@RequestBody 클라이언트가 전송한 파라미터가 json 형식일때 자동 매핑을 위한 어노테이션
+	public String update(@RequestBody EmpRequestDTO empRequestDTO) {
+		log.debug("넘어온 사원명은 {}", empRequestDTO.getName());
+		log.debug("넘어온 empId는 {}", empRequestDTO.getEmpId());
+		
+		return null;
+	}
 
 	
 	//모델 영역에서 에러가 발생하면 이 컨트롤러까지 전달되기 때문에, 컨트롤러 영역에서 

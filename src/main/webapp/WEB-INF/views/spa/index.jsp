@@ -61,6 +61,8 @@
 				$("#update-form input[name='height']").val(result.bio.height); //신장 채우기
 				$("#update-form input[name='weight']").val(result.bio.weight); //몸무게 채우기
 				$("#update-form select[name='bloodType']").val(result.bio.bloodType); //혈액형 채우기
+				
+				$("#update-form input[name='empId']").val(result.empId); //히든에 채우기
 			}
 		});
 	}
@@ -111,10 +113,44 @@
 		
 	}
 	
+	//사원정보 수정하기 
+	function update(){
+		if(confirm("수정하시겠어요?")){
+			// HTML 의 form 태그는 post/get 만 지원하므로 PUT 방식으로 전송할 수 없다.
+			//굳이 form태그를 통해 전송하지 말고,  json 문자열로 데이터를 전송하자!
+			let jsonData={
+				name:$("#update-form input[name='name']").val(),	
+				age:$("#update-form input[name='age']").val(),	
+				email:$("#update-form input[name='email']").val(),	
+				height:$("#update-form input[name='height']").val(),	
+				weight:$("#update-form input[name='weight']").val(),	
+				bloodType:$("#update-form select[name='bloodType']").val(),	
+				empId:$("#update-form input[name='empId']").val()
+			};
+			
+			$.ajax({
+				url:"/rest/emps/"+$("#update-form input[name='empId']").val(),
+				type:"PUT",
+				contentType:"application/json; charset=UTF-8",
+				//js  객체를 JSON 문자열로 자동변환해준다...서버에 전송할때는 문자열로만 보낼수 잇기 때문에...
+				data: JSON.stringify(jsonData),
+				success:function(result, status, xhr){
+					alert("수정 완료");
+				}, 
+				error: function(xhr, status, error){
+					console.error("수정 실패 ㅜㅜ", error);					
+				}
+			});
+		}		
+	}
 	
 	$(function(){
 		$("#bt-regist").click(()=>{
 			regist();
+		});
+		
+		$("#update-bt").click(()=>{
+			update();
 		});
 		
 		getEmpList();
@@ -195,7 +231,10 @@
 			<div class="col-sm-4" style="background-color: lavender;">
 				<h2>사원 상세 정보</h2>
 				<form id="update-form">
-				
+					
+					<!-- 수정, 삭제 시 사용할 pk 값을 유저가 보지 못하게 숨겨놓기 위해..  -->
+					<input type="hidden" name="empId">
+					
 					<div class="form-group">
 						<input type="text" class="form-control" placeholder="사원명 입력" name="name">
 					</div>

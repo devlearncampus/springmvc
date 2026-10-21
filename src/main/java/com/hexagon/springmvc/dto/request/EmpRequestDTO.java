@@ -21,4 +21,5 @@ public class EmpRequestDTO {
 	private float height;
 	private float weight;
 	private String bloodType;
+	private int empId;
 }
