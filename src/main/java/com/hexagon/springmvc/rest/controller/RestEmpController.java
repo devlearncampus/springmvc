@@ -1,11 +1,15 @@
 package com.hexagon.springmvc.rest.controller;
 
-import org.springframework.stereotype.Controller;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.hexagon.springmvc.domain.Bio;
 import com.hexagon.springmvc.dto.request.EmpRequestDTO;
 import com.hexagon.springmvc.exception.BusinessException;
 import com.hexagon.springmvc.service.EmpService;
@@ -15,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 //사원에 대한 요청을 처리하는 컨트롤러는 맞으나, 클라이언트의 비동기 요청을 받기 위한 컨트롤러임
 //따라서 이 컨트롤러의 메서들은 jsp를 반환하면 안되고, 순수한 데이터만을 반환해서  응답 body 로 보내야 한다..
-@Controller
+@RestController
 @RequestMapping("/rest/emp")
 @Slf4j
 @RequiredArgsConstructor
@@ -39,6 +43,13 @@ public class RestEmpController {
 		empService.regist(empRequestDTO);
 		
 		return "ok";
+	}
+	
+	@GetMapping("/list")
+	public List getList() {
+		List<Bio> empList=empService.getEmpList();
+		
+		return empList;
 	}
 	
 	//모델 영역에서 에러가 발생하면 이 컨트롤러까지 전달되기 때문에, 컨트롤러 영역에서 

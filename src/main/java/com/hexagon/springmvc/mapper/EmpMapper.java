@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.hexagon.springmvc.common.web.Pager;
 import com.hexagon.springmvc.domain.Emp;
 
 //@Mapper 어노테이션을 붙이면  Mapper.xml  을 간접제어할 수 있다.
@@ -12,5 +13,8 @@ import com.hexagon.springmvc.domain.Emp;
 @Mapper
 public interface EmpMapper {
 	public int insert(Emp emp);
-	public List selectAll();
+	
+	//public List selectAll(@Param("offset") int offset, @Param("pageSize") int pageSize);
+	public List selectAll(Pager pager);
+	
 }

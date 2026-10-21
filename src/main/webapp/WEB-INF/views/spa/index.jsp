@@ -43,11 +43,23 @@
 		});
 	}
 	
+	
+	function getList(){
+		$.ajax({
+			url:"/rest/emp/list",
+			type:"GET",
+			success:function(result, status, xhr){
+				console.log(result);
+			}			
+		});	
+	}
+	
 	$(function(){
 		$("#bt-regist").click(()=>{
 			regist();
 		});
 		
+		getList();
 	});
 
 </script>

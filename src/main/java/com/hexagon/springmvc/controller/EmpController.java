@@ -2,6 +2,7 @@ package com.hexagon.springmvc.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.hexagon.springmvc.common.web.Pager;
 import com.hexagon.springmvc.dto.request.EmpRequestDTO;
 import com.hexagon.springmvc.exception.BusinessException;
 import com.hexagon.springmvc.service.EmpService;
@@ -31,6 +33,7 @@ public class EmpController {
 	
 	//RootConfig 에 등록되어  @ComponentScan의 대상이 되는 컴포넌트이므로, 이미 메모리에 올라와 있고, 현재 컨트롤러에 자동 주입이 완료됨
 	private final EmpService empService; 
+	private final Pager pager;
 	
 	/*--------------------------------------------
 	 사원 등록 폼 요청을 처리하는 메서드
@@ -65,9 +68,13 @@ public class EmpController {
 	
 	//게시판 목록 요청 처리 
 	@GetMapping("/list")
-	public String getList(Model model) { // request 에 직접 담아도 되지만, 스프링에서는 결고를 Model 객체를 통해 담는다..
+	public String getList(Model model, HttpServletRequest request) { // request 에 직접 담아도 되지만, 스프링에서는 결고를 Model 객체를 통해 담는다..
+		
+		 
+		pager.init(request);//페이저 초기화(계산식이 동작해야하므로)
+		
 		//3단계) 모델 영역에 일 시키기
-		List empList = empService.getEmpList();
+		List empList = empService.getEmpList(pager);
 		
 		//4단계)  jsp에 보여질 List 저장 
 		model.addAttribute("empList", empList);	

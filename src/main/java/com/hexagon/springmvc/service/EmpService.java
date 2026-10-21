@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hexagon.springmvc.common.web.Pager;
 import com.hexagon.springmvc.domain.Bio;
 import com.hexagon.springmvc.domain.Emp;
 import com.hexagon.springmvc.dto.request.EmpRequestDTO;
@@ -84,8 +85,8 @@ public class EmpService {
 	} // emp + bio 모두  insert 하는 업무
 	
 	//사원 목록 가져오기 
-	public List getEmpList() {
-		return empMapper.selectAll();
+	public List getEmpList(Pager pager) {
+		return empMapper.selectAll(pager);
 	}
 }
 

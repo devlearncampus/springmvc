@@ -23,12 +23,12 @@
 	
 	
 	<resultMap type="Bio" id="joinMap">
-		<id 		column="emp_id" 		property="emp.empId"/>	
-		<result 	column="ename" 		property="emp.ename"/>			
-		<result 	column="age" 			property="emp.age"/>			
+		<id 		column="emp_id" 			property="emp.empId"/>	
+		<result 	column="ename" 			property="emp.ename"/>			
+		<result 	column="age" 				property="emp.age"/>			
 		<result 	column="email" 			property="emp.email"/>			
 		<result 	column="height" 			property="height"/>			
-		<result 	column="weight" 		property="weight"/>			
+		<result 	column="weight" 			property="weight"/>			
 		<result 	column="blood_type" 	property="bloodType"/>			
 	</resultMap>
 	
@@ -42,11 +42,11 @@
 		ex)  	select * from emp limit 0,10    처음 10건  1page 
 				select * from emp limit 10,10  10건을 제외한 그 다음부터 10건  2page 
 	 -->
-	<select id="selectAll" resultMap="joinMap">
+	<select id="selectAll" resultMap="joinMap" parameterType="Pager">
 		select e.emp_id as emp_id, ename, age, email, height, weight, blood_type
 		from emp e join bio b
 		on e.emp_id = b.emp_id		
-		<!-- offset 0 rows fetch next 10 rows only -->
+		offset #{offset} rows fetch next #{pageSize} rows only  <!--  offset 에는 몇번째 레코드부터 가져올지 결정 (0부터 시작), next 뒤에는 몇건씩 가져올지 결정 -->
 	</select>
 	
 </mapper>

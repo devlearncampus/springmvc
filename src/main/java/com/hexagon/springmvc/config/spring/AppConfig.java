@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import com.hexagon.springmvc.controller.EmpController;
+import com.hexagon.springmvc.common.web.Pager;
 
 /*
  * 스프링 프레임웍에서는 개발자가 직접 인스턴스를 new 해서 생성하는 것이 아니라, 
@@ -15,7 +15,8 @@ import com.hexagon.springmvc.controller.EmpController;
 @Configuration //이 클래스는 로직 용이 아니라, 빈 설정용이다!!!
 @ComponentScan(basePackages = {
 	"com.hexagon.springmvc.controller", 
-	"com.hexagon.springmvc.rest.controller"
+	"com.hexagon.springmvc.rest.controller",
+	"com.hexagon.springmvc.common.web"
 })
 public class AppConfig {
 	//스프링 컨테이너가 보유할 빈들의 목록을 어노테이션으로 등록하자
