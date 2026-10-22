@@ -3,6 +3,7 @@ package com.hexagon.springmvc.config.spring;
 import javax.servlet.Filter;
 
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /*
@@ -51,8 +52,12 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 		encodingFilter.setEncoding("UTF-8");
 		encodingFilter.setForceEncoding(true); //UTF-8 이외의 인코딩 요청이 들어와도 무시한다 , 즉 무조건 UTF-8
 		
+		//스프링 시큐리티 필터 프록새 생성 및 등록 (이때 빈의 이름은 반드시 "springSecurityFilterChain" 으로 해야 함)
+		DelegatingFilterProxy securityFilter= new DelegatingFilterProxy("springSecurityFilterChain");
+		
 		return new Filter[] {
-			encodingFilter
+			encodingFilter,
+			securityFilter
 		};
 	}
 }

@@ -24,7 +24,10 @@ import com.zaxxer.hikari.HikariDataSource;
 @Configuration  // 이 클래스는 java 의 로직을 작성하기 위함이 아니라, 기존의 xml과 같은 설정을 대신하기 위한 설정용 클래스임을 선언 
 @EnableTransactionManagement //스프링이 트랜잭션을 자동으로 처리해주기 위한 설정
 @MapperScan(basePackages = {"com.hexagon.springmvc.mapper"})
-@ComponentScan(basePackages = {"com.hexagon.springmvc.service"}) // 서블릿들이 볼 수 있는 scope 인 ServletContext 수준에 등록될 컴포넌트들의 위치 등록!!
+@ComponentScan(basePackages = {
+	"com.hexagon.springmvc.service",  
+	"com.hexagon.springmvc.security" //시큐리티는 필터이기 때문에 서블릿보다도 먼저 생성 및 등록되어야 하므로 Root 수준으로 등록되어야 한다
+}) // 서블릿들이 볼 수 있는 scope 인 ServletContext 수준에 등록될 컴포넌트들의 위치 등록!!
 public class RootConfig {
 	
 	/*----------------------------------------------

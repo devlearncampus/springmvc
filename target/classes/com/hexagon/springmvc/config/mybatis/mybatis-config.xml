@@ -11,6 +11,7 @@
 		<typeAlias type="com.hexagon.springmvc.common.web.Pager"	alias="Pager"/>
 		<typeAlias type="com.hexagon.springmvc.domain.Emp" 				alias="Emp"/>
 		<typeAlias type="com.hexagon.springmvc.domain.Bio" 				alias="Bio"/>
+		<typeAlias type="com.hexagon.springmvc.domain.Admin" 			alias="Admin"/>
 	</typeAliases>			
 	
 </configuration>

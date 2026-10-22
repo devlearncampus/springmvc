@@ -1,3 +1,7 @@
+<%@page import="com.hexagon.springmvc.security.AdminDetails"%>
+<%@page import="org.springframework.security.core.Authentication"%>
+<%@page import="com.hexagon.springmvc.domain.Admin"%>
+<%@page import="org.springframework.security.core.context.SecurityContext"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -161,10 +165,21 @@
 <body>
 
 	<div class="container-fluid">
-		<h1>Hello World!</h1>
-		<p>Resize the browser window to see the effect.</p>
-		<p>The columns will automatically stack on top of each other when
-			the screen is less than 768px wide.</p>
+		<%
+			SecurityContext securityContext=(SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
+			
+			Admin admin=null;
+			
+			if(securityContext !=null){ 
+				Authentication authentication=securityContext.getAuthentication();
+				
+				AdminDetails adminDetails = (AdminDetails)authentication.getPrincipal(); // AdminDetails 꺼내기..
+				admin = adminDetails.getAdmin();
+			}
+			
+		%>
+		<h1>Hello <%=admin.getName() %>님 </h1>
+
 		<div class="row">
 			<div class="col-sm-4" style="background-color: lavender;">
 				<h2>사원 등록</h2>
