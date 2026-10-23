@@ -40,6 +40,8 @@
 		.then( res => { //json 파싱이 성공된 시점에만 호출...파싱에 실패하면 catch 문 수행..
 			console.log("목록 조회 성공", res); //js  객체 배열
 		
+			$("select[name='topCategory']").append("<option value='0'>▼ 상위 카테고리 선택</option>");
+			
 			for(let i=0;i<res.length;i++){
 				$("select[name='topCategory']").append("<option value='"+res[i].topcategoryId+"'>"+res[i].topName+"</option>");
 			}
@@ -67,6 +69,12 @@
 		// response.json() 에 의한 파싱이 성공한 경우 아래의 then() 호출됨
 		.then( res =>{
 			console.log(res);
+			
+			$("select[name='subCategory']").empty(); //기존 모든 요소 삭제!!!!
+			
+			for(let i=0;i<res.length;i++){
+				$("select[name='subCategory']").append("<option value='"+res[i].subCategoryId+"'>"+res[i].subName+"</option>");
+			}			
 		})
 		.catch(error =>{
 			console.log("에러발생", error);
