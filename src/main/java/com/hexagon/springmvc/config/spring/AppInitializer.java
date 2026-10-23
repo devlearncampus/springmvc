@@ -56,8 +56,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 		DelegatingFilterProxy securityFilter= new DelegatingFilterProxy("springSecurityFilterChain");
 		
 		return new Filter[] {
-			encodingFilter,
-			securityFilter
+			encodingFilter //,securityFilter
 		};
 	}
 }

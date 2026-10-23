@@ -31,6 +31,7 @@ public class AppConfig {
 		//접미어를 결정
 		return resolver;
 	}
+	
 }
 
 

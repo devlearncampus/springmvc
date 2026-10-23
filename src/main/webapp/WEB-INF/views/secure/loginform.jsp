@@ -60,12 +60,9 @@
 				.catch( (error)=>{
 					alert("로그인 정보가 올바르지 않습니다");
 				}); // 반환된 Promise에서  reject() 호출 시  catch()가 호출됨..
-				
 			console.log("AAA");
-				
 		});
 	});
-	
 </script>
 </head>
 <body>

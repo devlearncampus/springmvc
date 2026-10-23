@@ -3,12 +3,14 @@ package com.hexagon.springmvc.config.spring;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.flywaydb.core.Flyway;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -53,6 +55,7 @@ public class RootConfig {
 	 우리의 그냥 순수 Mybatis를 직접 사용하는게 아니라, Spring으로 감싼(스프링이 가공한) Mybatis 를 사용할 것이므로, 그와 관련된 설정.. 
 	----------------------------------------------*/  
 	@Bean
+	@DependsOn("flyway") //Flyway 실행 완료 후 Mybatis 초기화  =  DB 구축 후에나  Mybatis 연동하라!!
 	public SqlSessionFactory sqlSessionFactory() throws Exception{
 		//SqlSessionFactoryBean에게 어떠한 DataSource  를 사용할지를 알려줘야 함 
 		SqlSessionFactoryBean sqlSessionFactoryBean= new SqlSessionFactoryBean();
@@ -88,6 +91,23 @@ public class RootConfig {
 	public PlatformTransactionManager platformTransactionManager(DataSource dataSource) {
 		return new DataSourceTransactionManager(dataSource);
 	} 
+	
+	
+	/*----------------------------------
+	 Flyway 관련 설정
+	----------------------------------*/
+	@Bean(initMethod = "migrate")
+	public Flyway flyway(DataSource dataSource) {
+		
+		return Flyway.configure()
+			.dataSource(dataSource)  //사용할 DB 
+			.locations("classpath:db/migration") //SQL 파일의 위치
+			.baselineOnMigrate(true) //기존에 이미 운영 중이거나 테이블이 있는 DB 라면 true로 설정
+			//Flyway의 파일명은 규칙이 있다 ( 반드시 대문자 V어야 한다.  그 뒤에 버전 숫자를 붙인다 그리고 개발자가 원하는 파일명은 언더바2개로 구분하여 확장자는 .sql)
+			//  V1__init.sql
+			.baselineVersion("0")
+			.load();
+	}
 	
 }
 
