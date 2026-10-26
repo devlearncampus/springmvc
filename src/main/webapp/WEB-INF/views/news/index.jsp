@@ -80,7 +80,60 @@
 			console.log("에러발생", error);
 		});				
 	}		
+	
+	//동기방식의 등록 요청
+	/*
+	1) XMLHttpRequest
+	2) JQuery Ajax
+	3) Promise
+	4) fetch
+	5) async/await : Promise+fetch()를 사용하지만 좀더 단순화 시켜서 마치 동기방식의 코드를 작성하는 방식으로..
+	*/
+	const regist = async ()=>{
 		
+		//글쓰기 폼의 내용들 수집 
+		const news = {
+			subCategoryId: $("select[name='subCategory']").val(),
+			subject: $("input[name='subject']").val(),
+			author: $("input[name='author']").val(),
+			detail: $("textarea[name='detail']").val()
+		}
+	
+		//인터넷상으로 서버와 클라이언트간 데이터를 주고 받을때는 문자열로 변환하여 전송 및 응답 받을 수 있다.
+		//위의  news 는 js의  객체이므로 그 자체로는 전송이 불가능하다...따라서 문자열화 시켜야 하는데, 개발자가 
+		//손수 쌍따옴표로 감싸지 말고,  JSON 내장 객체의 자동 문자열화 메서드인 stringify() 를 이용하자!!
+		console.log("JSON으로 변경 후 ", JSON.stringify(news));
+		
+		try{
+			//fetch 함수 호출 후 응답 정보 받기
+			response = await fetch("/api/news", {
+				method:"POST",
+				headers:{
+					"Content-Type" :"application/json"
+				},
+				body:JSON.stringify(news)
+			});
+			
+			//async/await 는 사실 내부에 Promise 수행되기는 하나, 개발자가 then() 을 여러거
+			//체이닝하여 코드를 작성하는 것 자체가 복잡하므로, 이 과정들을 마치 동기방식처럼 숨겨놓은 기술
+			//여전히 fetch() 문에 의해  Promise 가 반환되지만, 서버로부터 응답이 없을 경우의 처리를 
+			//개발자가 직접 처리할 필요없으며 응답이 없을 경우 알아서 catch문을 수행한다.
+			//또한 response.json() 에 의해 또 다른 Promise가 반환되지만, 역시 개발자가 
+			// then() 이용하여 파싱 성공 시점을 처리할 필요가 없다..
+			// 겉보기엔 비동기가 아닌 순차수행처럼 보인다..
+			console.log("이 코드 라인은 fetch()실행 후 서버에서 응답을 받게 되면 수행됨");
+			//파싱 
+			const result = response.json(); //파싱 시도..( 비동기 통신에서는 서버로 부터 받은 응답
+					//정보가 json  형태라는 것을 전제로 한다..일관성 목적..)
+			
+			console.log("서버로부터 받은 응답 데이터를 json으로 파싱한 결과는 ", result);
+			
+		}catch(error){
+			console.log("등록 중 에러 발생", error);
+		}		
+		
+	}	
+	
 	$(function(){
 		getTopList();	
 		
@@ -89,6 +142,12 @@
 			console.log("값 바꿨어? ", this.value); //이벤트 익명 함수 내에서의 this 란 이벤트를 일으킨 컴포넌트인 즉 select박스를 의미..
 			getSubList(this.value);
 		});
+		
+		
+		$("#bt-regist").click(()=>{
+			regist();
+		});
+		
 	});
 </script>
 
@@ -110,15 +169,15 @@
 					</div>
 									
 					<div class="form-group">
-						<input type="text" class="form-control" placeholder="기사 제목" name="name">
+						<input type="text" class="form-control" placeholder="기사 제목" name="subject">
 					</div>
 					
 					<div class="form-group">
-						<input type="text" class="form-control" placeholder="작성자" name="age">
+						<input type="text" class="form-control" placeholder="작성자" name="author">
 					</div>
 					
 					<div class="form-group">
-						<textarea class="form-control" placeholder="Write something..." name="email"></textarea>
+						<textarea class="form-control" placeholder="Write something..." name="detail"></textarea>
 					</div>
 					
 					<button type="button" class="btn btn-primary" id="bt-regist">기사 등록</button>
