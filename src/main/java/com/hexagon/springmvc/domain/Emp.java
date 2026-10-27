@@ -1,5 +1,7 @@
 package com.hexagon.springmvc.domain;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +11,12 @@ import lombok.Setter;
 public class Emp {
 	private int empId;
 	private String ename;
-	private int age;
-	private String email;	
-	private Bio bio;
+	private String email;
+	private String phone;
+	private LocalDateTime hiredate;
+	private Department department;
+	private Job job;
+	private String status;
+	private int annualLeaveDays;
 	
 }

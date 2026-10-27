@@ -1,4 +1,4 @@
-<%@page import="com.hexagon.springmvc.security.AdminDetails"%>
+<%@page import="com.hexagon.springmvc.security.AccountDetails"%>
 <%@page import="org.springframework.security.core.Authentication"%>
 <%@page import="com.hexagon.springmvc.domain.Admin"%>
 <%@page import="org.springframework.security.core.context.SecurityContext"%>

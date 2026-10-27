@@ -5,8 +5,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.hexagon.springmvc.domain.Admin;
-import com.hexagon.springmvc.mapper.AdminMapper;
+import com.hexagon.springmvc.domain.Account;
+import com.hexagon.springmvc.mapper.AccountMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,19 +23,17 @@ JPA - JPARepository
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService{
 	
-	private final AdminMapper adminMapper;
+	private final AccountMapper accountMapper;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		log.debug("로그인 시 사용된 아이디는 {}", username);
+		Account account=accountMapper.selectById(username);
 		
-		Admin admin=adminMapper.selectById(username);
-		
-		log.debug("사원 비번은 "+admin.getPassword());
-		log.debug("사원명은 "+admin.getName());
+		log.debug("로그인 아이디는 "+account.getLoginId());
+		log.debug("비밀번호는 "+account.getPassword());
 		
 		//개발자가  return 에 UserDetails  객체를 반환하면 이 객체를 PasswordEncoder 에게 맡겨서 비밀번호가 일치하는지 검증 하는 단계에 들어감..
-		return new AdminDetails(admin);
+		return new AccountDetails(account);
 	}
 	
 }

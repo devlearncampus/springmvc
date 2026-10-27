@@ -1,4 +1,4 @@
-<%@page import="com.hexagon.springmvc.security.AdminDetails"%>
+<%@page import="com.hexagon.springmvc.security.AccountDetails"%>
 <%@page import="org.springframework.security.core.Authentication"%>
 <%@page import="com.hexagon.springmvc.domain.Admin"%>
 <%@page import="org.springframework.security.core.context.SecurityContext"%>
@@ -166,17 +166,16 @@
 
 	<div class="container-fluid">
 		<%
-			SecurityContext securityContext=(SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
+		SecurityContext securityContext=(SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
 			
 			Admin admin=null;
 			
 			if(securityContext !=null){ 
 				Authentication authentication=securityContext.getAuthentication();
 				
-				AdminDetails adminDetails = (AdminDetails)authentication.getPrincipal(); // AdminDetails 꺼내기..
+				AccountDetails adminDetails = (AccountDetails)authentication.getPrincipal(); // AdminDetails 꺼내기..
 				admin = adminDetails.getAdmin();
 			}
-			
 		%>
 		<h1>Hello <%=admin.getName() %>님 </h1>
 

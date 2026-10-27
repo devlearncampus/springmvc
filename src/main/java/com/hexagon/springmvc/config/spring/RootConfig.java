@@ -41,7 +41,7 @@ public class RootConfig {
 		HikariDataSource dataSource = new HikariDataSource();
 		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 		dataSource.setJdbcUrl("jdbc:oracle:thin:@localhost:1521/XEPDB1");
-		dataSource.setUsername("web");
+		dataSource.setUsername("hr");
 		dataSource.setPassword("1234");
 		
 		//(선택) 추가 권장 

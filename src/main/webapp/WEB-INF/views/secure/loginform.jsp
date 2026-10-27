@@ -17,50 +17,35 @@
 	4) fetch ( Promise가 사용하기에 너무 코드량이 많고 복잡하므로 fetch 로 숨겨놓음)
 	5) async/await
 	*/
-	function login(){
-		/*
-		Promise 란 ?  미래의 확정되지 않는 작업에 사용되는 비동기 처리 기술..(웹 요청..)
-		화살표 함수의 매개변수 
-		변수1) resolve  라는 이름의 함수명을 정함 - 비동기 요청이 성공하였을때 호출할 함수명
-		변수2) reject 라는 이름의 함수명을 정함 - 비동기 요청이 실패하였을때 호출할 함수명
-		*/
-		let formData={
-			accountId: $("input[name='accountId']").val(),
-			pwd: $("input[name='pwd']").val()
-		}
-		
-		let promise = new Promise( (resolve , reject)=>{
-			//비동기 출발~!
-			$.ajax({
-				url:"/login",//우리가 정한 로그인 요청 url 이므로, 스프링 시큐리티에게 알려줘야 함
-				type:"POST",
-				data:formData,  // 스프링 시큐리티는 form 전송을 허용하므로, json 으로 보내지 말자 contentType:"application/json; charset=UTF-8" 하지말자
-										//개발자가  contentType 을 생략하면 디폴트 폼 파라미터임
-				success:function(result, status, xhr){ // 2xx 성공의 상태 status 코드 서버로부터 받아올때
-					resolve(result);
+	const login= async ()=>{
+
+		try{
+			/*스프링 시큐리티의 UsernamePasswordAuthenticationFilter 에서 파라미터를 받을때 폼 파라미터를 받음*/
+			let formData = new URLSearchParams();
+			
+			formData.append("accountId", $("input[name='accountId']").val());
+			formData.append("pwd", $("#input[name='pwd']").val());
+			
+			let response = await fetch("/login", {
+				method:"POST",				
+				headers:{
+					contentType:"application/www-x-form-urlencoded; charset=UTF-8"
 				},
-				error:function(xhr, status, error){ // 3xx 이상의 문제가 생긴 status 코드를 서버로부터 받아올때..
-					reject(error);
-				}
+				body:formData
 			});
-		}); //Promise  생성자의 닫는 소괄호..
-		
-		return promise;		
+			
+			let jsonData = await response.json();
+			
+			console.log("로그인 성공", jsonData);
+			
+		}catch(error){
+			console.log("로그인 결과 에러 ", error);
+		}
 	}
 	
 	$(function(){
 		$("#bt-login").click(()=>{
-			login()
-				.then((result)=>{
-					console.log("로그인 성공 후 반환 데이터는 ", result);
-					console.log("서버의 응답 정보", result);
-					alert("로그인 성공");
-					location.href="/spa/main";
-				}) //반환된  Promise의 then() 을 호출 ,  then은 resolve() 호출시 호출됨..
-				.catch( (error)=>{
-					alert("로그인 정보가 올바르지 않습니다");
-				}); // 반환된 Promise에서  reject() 호출 시  catch()가 호출됨..
-			console.log("AAA");
+			login();			
 		});
 	});
 </script>

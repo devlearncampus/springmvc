@@ -6,20 +6,18 @@ import java.util.Collections;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.hexagon.springmvc.domain.Admin;
+import com.hexagon.springmvc.domain.Account;
 
 import lombok.Getter;
 
-//애플리케이션 마다  db상 아이디 , 패스워드 등의 컬럼명이 틀리기 때문에 스프링이 자동으로 인식할 수 없다.
-//따라서 스프링 측에서 이미 정의해놓은 도메인 객체인 UserDetails 안에 우리의 Admin  도메인 객체의 정보를 대입해놓아야 한다
 @Getter
-public class AdminDetails implements UserDetails{
+public class AccountDetails implements UserDetails{
 	
 	//사용자 정보를 낱개로 보유하지 않기 위해 Admin 통째로 보유하자!!
-	private Admin admin;
+	private Account account;
 
-	public AdminDetails(Admin admin) {
-		this.admin = admin;
+	public AccountDetails(Account account) {
+		this.account = account;
 	}
 
 	@Override
@@ -29,13 +27,13 @@ public class AdminDetails implements UserDetails{
 
 	@Override
 	public String getPassword() {
-		return admin.getPassword();
+		return account.getPassword();
 	}
 
 	//스프링 시큐리티에서 말하는 username  이란 로그인 아이디를 말한다!!	
 	@Override
 	public String getUsername() {
-		return admin.getLoginId();
+		return account.getLoginId();
 	}
 
 	@Override
